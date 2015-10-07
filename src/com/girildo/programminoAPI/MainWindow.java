@@ -371,7 +371,7 @@ public class MainWindow
 			@Override
 			protected Void doInBackground() throws Exception
 			{
-				Messaggio mess = logica.caricaDaLink(link);
+				Messaggio mess = logica.OttieniCommentiPulitiDaUrl(link);
 				if(mess.getFlag() == FlagMessaggio.NESSUN_ERRORE)
 				{
 					textAreaFoto.setText(mess.getTestoNessunErrore());

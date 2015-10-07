@@ -4,16 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.flickr4java.flickr.Flickr;
-import com.flickr4java.flickr.FlickrException;
-import com.flickr4java.flickr.REST;
-import com.flickr4java.flickr.groups.discuss.GroupDiscussInterface;
-import com.flickr4java.flickr.groups.discuss.Reply;
-import com.flickr4java.flickr.groups.discuss.ReplyObject;
 import com.girildo.programminoAPI.Messaggio.FlagMessaggio;
 import com.girildo.programminoAPI.LogicaProgramma;
+import com.girildo.programminoAPI.Commento.TipoCommento;
 
 
 
@@ -25,38 +21,7 @@ public class LogicaProgrammaSG extends LogicaProgramma
 		super();
 	}
 	
-	ArrayList<Commento> listaCommenti;
 	HashMap<Integer, Foto> dictionaryFoto;
-	
-	@Override
-	protected String ottieniCommenti(String topicID) throws FlickrException
-	{
-		Flickr flickr = new Flickr(KEY, SECRET, new REST());
-        GroupDiscussInterface dInterface = flickr.getDiscussionInterface();
-        int count = dInterface.getTopicInfo(topicID).getCountReplies(); //count delle risposte
-        ReplyObject rep = dInterface.getReplyList(topicID, count, 1); //ottiene l'oggetto dall'API
-        ArrayList<Reply> repList = rep.getReplyList(); //estrae la lista delle risposte
-        listaCommenti = new ArrayList<Commento>(); //lista di commenti con classe custom
-        for(Reply reply : repList)
-        {
-        	Pattern p = Pattern.compile("<img class.+alt=\"Classifica\" />");
-        	if(p.matcher(reply.getMessage()).find())
-        	{
-        		//System.out.println("qui");
-        		break;
-        	}
-        	Commento commento = new Commento(reply.getMessage(), new Autore(reply.getAuthorname(), reply.getAuthorId()));
-        	listaCommenti.add(commento);
-        }
-        StringBuilder builder = new StringBuilder();
-        for(Commento c:listaCommenti)
-        {
-        	if(c.getTipo() == Commento.TipoCommento.FOTO)
-        		builder.append(c.toString()+'\n');
-        }
-        return builder.toString();
-	}
-
 	List<Autore> listaAutoVoto, listaAutoriCheHannoVotato;
 	
 	@Override
@@ -115,7 +80,7 @@ public class LogicaProgrammaSG extends LogicaProgramma
 					}
 				}
 			}
-			else //se non è votazione (=È foto)
+			else //se non è votazione (=È foto); qui si genera l'hash set;
 			{
 				Autore autore = c.getAutore();
 				int id = Integer.parseInt(c.getTesto().replace("#", ""));
@@ -137,13 +102,13 @@ public class LogicaProgrammaSG extends LogicaProgramma
 		{
 			if(!listaAutoriCheHannoVotato.contains(f.getAutore()))
 			{
-				builderNonVotanti.append("• " + f.getAutore().getNomeAbbreviato()+
+				builderNonVotanti.append("\u2022 " + f.getAutore().getNomeAbbreviato()+
 						" (#"+f.getID()+" con "+f.getVoti()+" punti)\n");
 				flagXMessaggio = FlagMessaggio.ERRORE_PARZIALE;
 			}
 			if(listaAutoVoto.contains(f.getAutore()))
 			{
-				builderAutoVoto.append("• " + f.getAutore().getNomeAbbreviato()+"\n");
+				builderAutoVoto.append("\u2022 " + f.getAutore().getNomeAbbreviato()+"\n");
 				flagXMessaggio = FlagMessaggio.ERRORE_PARZIALE;
 			}
 			builderClassifica.append(f.toString() + "\n");
@@ -166,5 +131,60 @@ public class LogicaProgrammaSG extends LogicaProgramma
 		
 		return new Messaggio(builderClassifica.toString(), flagXMessaggio
 				, builderNonVotanti.toString()+builderAutoVoto.toString());
+	}
+	@Override
+	protected boolean pulisciCommenti(ArrayList<Commento> listaCommentiSporchi)
+	{
+		System.out.println(listaCommentiSporchi.size());
+		super.listaCommenti = new ArrayList<Commento>();
+		for(Commento c : listaCommentiSporchi)
+		{
+			TipoCommento tipoNuovo = c.getTipo();
+			String testoNuovo;
+			String testo = c.getTesto();
+			Autore autore = c.getAutore();
+			if(!testo.contains("#") && testo.contains("<a href")) //se il commento contiene un link ad una foto ma niente cancelletto
+			{													  //spara una exception catched dal chiamante
+				throw new IllegalArgumentException("Il commento di "+autore.getNome()+" dovrebbe contenere una foto ma non trovo il cancelletto" );
+			}
+			if(!testo.contains("#") && !testo.contains("<a href")) //se il commento non contiene né foto né cancelletto è da ignorare
+			{
+				tipoNuovo = TipoCommento.IGNORA;
+			}
+			testo = testo.replaceAll("<a.+\\/><\\/a>", "");
+			String[] split = testo.split("\n");
+			StringBuilder builder = new StringBuilder(); 
+			Pattern pattern = Pattern.compile("(# ?\\d{1,2})+");
+			for(String s : split)
+			{
+				if(s.isEmpty())
+					continue;
+				
+				if(s.matches("#{6,100}"))			
+				{
+					Commento.Voting = true;
+					tipoNuovo = TipoCommento.STARTVOTING;
+				}
+				
+				if(s.matches("(# ?\\d{1,2})+"))
+					builder.append(s);
+				else if(s.matches("(# ?\\d{1,2}) ?STOP *"))
+					builder.append(s.replace("STOP", "").trim());
+				else
+				{
+					Matcher matcher = pattern.matcher(s);
+					if(matcher.find())
+						builder.append(matcher.group());
+				}
+					
+			}
+			testoNuovo = builder.toString().replaceAll(" ", "");
+			Commento cd = new Commento(testoNuovo, autore);
+			cd.setTipo(tipoNuovo);
+			cd.AggiornaTipo(TipoLogica.LOGICA_SG);
+			System.out.println(cd.getTipo());
+			listaCommenti.add(cd);
+		}
+		return listaCommenti.size() == listaCommentiSporchi.size();
 	}
 }
