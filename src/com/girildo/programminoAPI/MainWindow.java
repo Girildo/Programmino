@@ -41,6 +41,10 @@ import com.girildo.programminoAPI.Messaggio.FlagMessaggio;
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.ButtonGroup;
 
 public class MainWindow
 {
@@ -77,6 +81,11 @@ public class MainWindow
 	private static String VERSIONE = "1.2 (18.5.2015)";
 	private JPopupMenu popupMenu_3;
 	private JMenuItem menuItemVersione;
+	private JMenuBar menuBar;
+	private JMenu mnImpostazioni;
+	private JRadioButtonMenuItem rdbtnmntmSoniaGallery;
+	private JRadioButtonMenuItem rdbtnmntmCampionato;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
 	
 	public static void main(String[] args)
 	{
@@ -284,6 +293,33 @@ public class MainWindow
 		});
 		popupMenu_2.add(mntmCopiaPerErrori);
 		
+		menuBar = new JMenuBar();
+		frmProgramminoSoniagallery.setJMenuBar(menuBar);
+		
+		mnImpostazioni = new JMenu("Impostazioni");
+		menuBar.add(mnImpostazioni);
+		
+		rdbtnmntmSoniaGallery = new JRadioButtonMenuItem("Sonia Gallery");
+		rdbtnmntmSoniaGallery.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				cambiaTipoClassifica();
+			}
+		});
+		buttonGroup.add(rdbtnmntmSoniaGallery);
+		rdbtnmntmSoniaGallery.setSelected(true);
+		mnImpostazioni.add(rdbtnmntmSoniaGallery);
+		
+		rdbtnmntmCampionato = new JRadioButtonMenuItem("Campionato");
+		rdbtnmntmCampionato.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				cambiaTipoClassifica();
+			}
+		});
+		buttonGroup.add(rdbtnmntmCampionato);
+		mnImpostazioni.add(rdbtnmntmCampionato);
+		
 		popupMenu_3 = new JPopupMenu();
 		addPopup(frmProgramminoSoniagallery, popupMenu_3);
 		
@@ -291,6 +327,11 @@ public class MainWindow
 		menuItemVersione.setEnabled(false);
 		menuItemVersione.setText("Versione: "+VERSIONE);
 		popupMenu_3.add(menuItemVersione);
+	}
+
+	protected void cambiaTipoClassifica() 
+	{
+		slider.setEnabled(rdbtnmntmSoniaGallery.isSelected());		
 	}
 
 	protected void generaClassifica()
