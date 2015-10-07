@@ -167,7 +167,7 @@ public class MainWindow
 		btnOttieniCommenti.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				ottieniCommenti(textFieldLink.getText());
+				ottieniCommentiOnClick(textFieldLink.getText());
 			}
 		});
 		btnOttieniCommenti.setHorizontalAlignment(SwingConstants.LEADING);
@@ -184,7 +184,7 @@ public class MainWindow
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				generaClassifica();
+				generaClassificaOnClick();
 			}
 		});
 		btnGeneraClassifica.setEnabled(false);
@@ -332,11 +332,12 @@ public class MainWindow
 	protected void cambiaTipoClassifica() 
 	{
 		slider.setEnabled(rdbtnmntmSoniaGallery.isSelected());		
+		this.reset();
 	}
 
-	protected void generaClassifica()
+	protected void generaClassificaOnClick()
 	{
-		Messaggio mess = logica.generaClassifica(this.slider.getValue());
+		Messaggio mess = logica.GeneraClassifica(this.slider.getValue());
 		if(mess.getFlag() == FlagMessaggio.NESSUN_ERRORE)
 		{
 			textAreaClassifica.setText(mess.getTestoNessunErrore());
@@ -356,9 +357,9 @@ public class MainWindow
 		this.menuItemCopia.setEnabled(this.textAreaClassifica.getText().length() != 0);
 	}
 
-	protected void ottieniCommenti(final String link)
+	protected void ottieniCommentiOnClick(final String link)
 	{
-		logica = new LogicaProgramma();
+		logica = new LogicaProgrammaSG();
 		this.reset();
 		
 		final DialogWait dial = new DialogWait(this.frmProgramminoSoniagallery);
