@@ -23,6 +23,11 @@ public class Commento
 			if(this.tipo != TipoCommento.STARTVOTING)
 				this.tipo = Voting?TipoCommento.VOTAZIONE:TipoCommento.FOTO;
 		}
+		if(logica == TipoLogica.LOGICA_CM)
+		{
+			if(this.tipo != TipoCommento.STARTVOTING)
+				this.tipo = Voting?TipoCommento.VOTAZIONE:TipoCommento.FOTO;
+		}
 	}
 	
 	public static void resetVotingFlag()

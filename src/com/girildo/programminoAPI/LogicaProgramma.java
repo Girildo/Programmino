@@ -63,8 +63,8 @@ public abstract class LogicaProgramma
         	listaCommentiSporchi.add(commento);
         }
         boolean success = pulisciCommenti(listaCommentiSporchi);
-        System.out.println("qui");
-        String message = buildMessage();
+        //System.out.println("qui");
+        String message = buildMessageFoto(); //crea il messaggio con le foto trovate
         
         if (success)
         	return new Messaggio(message, FlagMessaggio.NESSUN_ERRORE);
@@ -72,9 +72,8 @@ public abstract class LogicaProgramma
         
 	}
 	
-	protected String buildMessage()
+	protected String buildMessageFoto()
 	{
-		System.out.println("XYO"); 
 		StringBuilder builder = new StringBuilder();
 	        for(Commento c:listaCommenti)
 	        {

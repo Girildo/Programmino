@@ -135,7 +135,7 @@ public class LogicaProgrammaSG extends LogicaProgramma
 	@Override
 	protected boolean pulisciCommenti(ArrayList<Commento> listaCommentiSporchi)
 	{
-		System.out.println(listaCommentiSporchi.size());
+		//System.out.println(listaCommentiSporchi.size());
 		super.listaCommenti = new ArrayList<Commento>();
 		for(Commento c : listaCommentiSporchi)
 		{

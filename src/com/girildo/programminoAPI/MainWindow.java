@@ -307,10 +307,10 @@ public class MainWindow
 			}
 		});
 		buttonGroup.add(rdbtnmntmSoniaGallery);
-		rdbtnmntmSoniaGallery.setSelected(true);
 		mnImpostazioni.add(rdbtnmntmSoniaGallery);
 		
 		rdbtnmntmCampionato = new JRadioButtonMenuItem("Campionato");
+		rdbtnmntmCampionato.setSelected(true);
 		rdbtnmntmCampionato.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -359,7 +359,13 @@ public class MainWindow
 
 	protected void ottieniCommentiOnClick(final String link)
 	{
-		logica = new LogicaProgrammaSG();
+		logica = null;
+		if(rdbtnmntmSoniaGallery.isSelected())
+			logica = new LogicaProgrammaSG();
+		else if(rdbtnmntmCampionato.isSelected())
+			logica = new LogicaProgrammaCM();
+		else
+			return;
 		this.reset();
 		
 		final DialogWait dial = new DialogWait(this.frmProgramminoSoniagallery);
