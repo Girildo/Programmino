@@ -1,21 +1,19 @@
 package com.girildo.programminoAPI;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//import com.flickr4java.flickr.FlickrException;
 import com.girildo.programminoAPI.Commento.TipoCommento;
 import com.girildo.programminoAPI.Messaggio.FlagMessaggio;
 
 
 
 public class LogicaProgrammaCM extends LogicaProgramma 
-{
-	private enum Categoria{TECNICA, ESPRESSIVITA, ORIGINALITA}
-	
-	@SuppressWarnings("unused")
+{	
 	@Override
 	public Messaggio GeneraClassifica(int numPreferenze) 
 	{
@@ -76,6 +74,7 @@ public class LogicaProgrammaCM extends LogicaProgramma
 				
 				for(String s:split)
 				{
+					//System.out.println("qui");
 					if(!s.matches("[teoTEO] ?:? ?# ?\\d{1,2}"))
 						return new Messaggio("La votazione di " + c.getAutore().getNome() + 
 								" sembra avere un errore di formato", FlagMessaggio.ERRORE);
@@ -87,41 +86,89 @@ public class LogicaProgrammaCM extends LogicaProgramma
 						int parseID = Integer.parseInt(testo);
 						Foto fotoVotata = dictionaryFoto.get(parseID);
 						
-						if(dictionaryFoto.get(parseID).getAutore() == c.getAutore()) //check sull'autovoto
+						if(fotoVotata == null)
+							return new Messaggio(c.getAutore().getNome()+" ha votato una foto che non esiste"
+									, FlagMessaggio.ERRORE);
+						
+						if(fotoVotata.getAutore().equals(c.getAutore())) //se l'autore della foto è lo stesso del commenot
 						{
-							listaAutoriConAutovoto.add(c.getAutore());
+							listaAutoriConAutovoto.add(c.getAutore()); //c'è autovoto
 						}
+						
+						if(!listaAutoriCheHannoVotato.contains(c.getAutore()))
+							listaAutoriCheHannoVotato.add(c.getAutore());
 						
 						classificaGenerale.get(parseID).aumentaVoti(1);
 						switch (tipoVoto) //Definisce la classifica da recuperare
 						{
 							case 'T':
-								if(votateNelCommentoTecn.contains(dictionaryFoto.get(parseID)))
+								if(votateNelCommentoTecn.contains(fotoVotata))
 									return new Messaggio(c.getAutore().getNome() + " ha votato due volte la stessa"
 											+ " foto nella categoria 'tecnica'", FlagMessaggio.ERRORE);
 								classificaTecn.get(parseID).aumentaVoti(1);
-								votateNelCommentoTecn.add(dictionaryFoto.get(parseID));
+								votateNelCommentoTecn.add(fotoVotata);
 								break;
 							case 'E':
-								if(votateNelCommentoEspr.contains(dictionaryFoto.get(parseID)))
+								if(votateNelCommentoEspr.contains(fotoVotata))
 									return new Messaggio(c.getAutore().getNome() + " ha votato due volte la stessa"
 											+ " foto nella categoria 'espressivit�'", FlagMessaggio.ERRORE);
 								classificaEspr.get(parseID).aumentaVoti(1);
-								votateNelCommentoEspr.add(dictionaryFoto.get(parseID));
+								votateNelCommentoEspr.add(fotoVotata);
 								break;
 							case 'O':
-								if(votateNelCommentoOrig.contains(dictionaryFoto.get(parseID)))
+								if(votateNelCommentoOrig.contains(fotoVotata))
 									return new Messaggio(c.getAutore().getNome() + " ha votato due volte la stessa"
 											+ " foto nella categoria 'originalit�'", FlagMessaggio.ERRORE);
 								classificaOrig.get(parseID).aumentaVoti(1);
-								votateNelCommentoOrig.add(dictionaryFoto.get(parseID));
+								votateNelCommentoOrig.add(fotoVotata);
 								break;
 						}	
 					}
 				}
 			}
 		}
-		return new Messaggio(null, FlagMessaggio.ERRORE);
+		List<Foto> listaOrdinataPerClassifica = new ArrayList<Foto>(classificaGenerale.values());
+		Collections.sort(listaOrdinataPerClassifica); //ordina la lista (dal più basso al più alto)
+		Collections.reverse(listaOrdinataPerClassifica); //inverte l'ordine
+		StringBuilder builderClassifica = new StringBuilder();
+		StringBuilder builderNonVotanti = new StringBuilder("Non hanno votato: \n");
+		StringBuilder builderAutoVoto = new StringBuilder("Si sono autovotati: \n");
+		
+		FlagMessaggio flagXMessaggio = FlagMessaggio.NESSUN_ERRORE;
+		
+		for(Foto f:listaOrdinataPerClassifica)
+		{
+			if(!listaAutoriCheHannoVotato.contains(f.getAutore()))
+			{
+				builderNonVotanti.append("\u2022 " + f.getAutore().getNomeAbbreviato()+
+						" (#"+f.getID()+" con "+f.getVoti()+" punti)\n");
+				flagXMessaggio = FlagMessaggio.ERRORE_PARZIALE;
+			}
+			if(listaAutoriConAutovoto.contains(f.getAutore()))
+			{
+				builderAutoVoto.append("\u2022 " + f.getAutore().getNomeAbbreviato()+"\n");
+				flagXMessaggio = FlagMessaggio.ERRORE_PARZIALE;
+			}
+			builderClassifica.append(f.toString());
+			builderClassifica.append(" (T:" + classificaTecn.get(f.getID()).getVoti());
+			builderClassifica.append("| E:" + classificaEspr.get(f.getID()).getVoti());
+			builderClassifica.append("| O:" + classificaOrig.get(f.getID()).getVoti());
+			builderClassifica.append(")\n");
+		}
+		builderNonVotanti.append("-----------------------\n");
+		builderAutoVoto.append("-----------------------\n");
+		builderClassifica.append("-----------------------\n");
+		builderClassifica.append("Foto trovate: "+dictionaryFoto.size()+"\n");
+		builderClassifica.append("Hanno votato in "+listaAutoriCheHannoVotato.size()+"\n");
+		builderClassifica.append("Si sono autovotati in "+listaAutoriConAutovoto.size()+"\n");
+		builderClassifica.append("Voti con errore: "+commentiConErrore.size()+"\n");
+		
+		if(listaAutoriConAutovoto.size() == 0)
+			builderAutoVoto.delete(0, builderAutoVoto.length());
+		
+		
+		return new Messaggio(builderClassifica.toString(), flagXMessaggio
+				, builderNonVotanti.toString()+builderAutoVoto.toString());
 	}
 
 	@Override
