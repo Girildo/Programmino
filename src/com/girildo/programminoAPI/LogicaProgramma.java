@@ -72,6 +72,15 @@ public abstract class LogicaProgramma
         
 	}
 	
+	protected Foto generaFotoDaCommento(Commento c) throws NumberFormatException
+	{
+		Autore autore = c.getAutore();
+		int id = Integer.parseInt(c.getTesto().replace("#", ""));
+		Foto foto = new Foto(autore, id);
+		autore.setSuaFoto(foto);
+		return foto;
+	}
+	
 	protected String buildMessageFoto()
 	{
 		StringBuilder builder = new StringBuilder();

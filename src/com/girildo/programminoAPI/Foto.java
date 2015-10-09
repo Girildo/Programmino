@@ -50,6 +50,12 @@ public class Foto implements Comparable<Foto>
 	}
 
 
+	
+	public Foto clonaFoto()
+	{
+		return new Foto(this.autore, this.ID);
+	}
+	
 	@Override
 	public int compareTo(Foto other)
 	{

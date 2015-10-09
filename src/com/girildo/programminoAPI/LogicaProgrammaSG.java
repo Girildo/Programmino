@@ -82,11 +82,8 @@ public class LogicaProgrammaSG extends LogicaProgramma
 			}
 			else //se non è votazione (=È foto); qui si genera l'hash set;
 			{
-				Autore autore = c.getAutore();
-				int id = Integer.parseInt(c.getTesto().replace("#", ""));
-				Foto foto = new Foto(autore, id);
-				autore.setSuaFoto(foto);
-				dictionaryFoto.put(id, foto);
+				Foto foto = super.generaFotoDaCommento(c);
+				dictionaryFoto.put(foto.getID(), foto);
 			}
 		}
 		List<Foto> listaOrdinataPerClassifica = new ArrayList<Foto>(dictionaryFoto.values());
