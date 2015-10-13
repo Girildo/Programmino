@@ -78,7 +78,7 @@ public class MainWindow
 	 * Launch the application.
 	 */
 	
-	private static String VERSIONE = "1.2 (18.5.2015)";
+	private static String VERSIONE = "2.0 (13.10.2015)";
 	private JPopupMenu popupMenu_3;
 	private JMenuItem menuItemVersione;
 	private JMenuBar menuBar;
@@ -327,6 +327,7 @@ public class MainWindow
 		menuItemVersione.setEnabled(false);
 		menuItemVersione.setText("Versione: "+VERSIONE);
 		popupMenu_3.add(menuItemVersione);
+		cambiaTipoClassifica();
 	}
 
 	protected void cambiaTipoClassifica() 
