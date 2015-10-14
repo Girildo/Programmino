@@ -78,7 +78,7 @@ public class MainWindow
 	 * Launch the application.
 	 */
 	
-	private static String VERSIONE = "2.0 (13.10.2015)";
+	private static String VERSIONE = "2.0.1 (14.10.2015)";
 	private JPopupMenu popupMenu_3;
 	private JMenuItem menuItemVersione;
 	private JMenuBar menuBar;
@@ -259,10 +259,11 @@ public class MainWindow
 		horizontalBox.add(lblNewLabel);
 		
 		slider = new JSlider();
+		slider.setMinimum(1);
 		slider.setSnapToTicks(true);
 		slider.setPaintTicks(true);
 		slider.setMaximum(10);
-		slider.setValue(4);
+		slider.setValue(3);
 		slider.setPaintLabels(true);
 		slider.setMajorTickSpacing(1);
 		horizontalBox.add(slider);
@@ -332,7 +333,8 @@ public class MainWindow
 
 	protected void cambiaTipoClassifica() 
 	{
-		slider.setEnabled(rdbtnmntmSoniaGallery.isSelected());		
+		//slider.setEnabled(rdbtnmntmSoniaGallery.isSelected());
+		slider.setEnabled(true);
 		this.reset();
 	}
 

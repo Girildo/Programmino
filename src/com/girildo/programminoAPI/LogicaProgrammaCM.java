@@ -66,7 +66,7 @@ public class LogicaProgrammaCM extends LogicaProgramma
 			else if(c.getTipo() == TipoCommento.VOTAZIONE)
 			{
 				String[] split = c.getTesto().split("!");
-				if(split.length < 9)
+				if(split.length < 3*numPreferenze)
 				{
 					return new Messaggio("La votazione di "+ c.getAutore().getNome() +
 							" sembra avere meno di nove voti", FlagMessaggio.ERRORE);
@@ -214,7 +214,8 @@ public class LogicaProgrammaCM extends LogicaProgramma
 				}
 			}
 			c.setTesto(builder.toString()); //setta il testo di questo commento al builder
-			c.AggiornaTipo(TipoLogica.LOGICA_CM); //aggiorna il tipo
+			if(c.getTipo() != TipoCommento.IGNORA)
+				c.AggiornaTipo(TipoLogica.LOGICA_CM); //aggiorna il tipo
 			listaCommenti.add(c); //aggiorna la lista
 			System.out.println(c.getTipo());
 			if(c.getTipo() == TipoCommento.VOTAZIONE)
