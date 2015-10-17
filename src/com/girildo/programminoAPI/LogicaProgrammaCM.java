@@ -69,13 +69,13 @@ public class LogicaProgrammaCM extends LogicaProgramma
 				if(split.length < 3*numPreferenze)
 				{
 					return new Messaggio("La votazione di "+ c.getAutore().getNome() +
-							" sembra avere meno di nove voti", FlagMessaggio.ERRORE);
+							" sembra avere meno di "+ 3*numPreferenze +"voti", FlagMessaggio.ERRORE);
 				}
 				
 				for(String s:split)
 				{
 					//System.out.println("qui");
-					if(!s.matches("[teoTEO] ?:? ?# ?\\d{1,2}"))
+					if(!s.matches("[teoTEO] ?:? ?# ?\\d{1,2} ?"))
 						return new Messaggio("La votazione di " + c.getAutore().getNome() + 
 								" sembra avere un errore di formato", FlagMessaggio.ERRORE);
 					else
@@ -202,9 +202,9 @@ public class LogicaProgrammaCM extends LogicaProgramma
 					c.setTipo(TipoCommento.STARTVOTING);
 				}
 				
-				if(s.matches("[TEOteo] ?:? ?(# ?\\d{1,2})")) //per beccare le votazioni
+				if(s.matches("[TEOteo] ?:? ?(# ?\\d{1,2} ?)")) //per beccare le votazioni
 					builder.append(s.replace(" ", "").trim()+"!");
-				else if(s.matches("[TEOteo] ?:? ?(# ?\\d{1,2}) ?STOP *")) //per beccare le votazioni con stop
+				else if(s.matches("[TEOteo] ?:? ?(# ?\\d{1,2} ?) ?STOP *")) //per beccare le votazioni con stop
 					builder.append(s.replace("STOP", "").replace(" ", "").trim()+"!");
 				else //per beccare le foto
 				{
