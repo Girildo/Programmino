@@ -315,7 +315,7 @@ public class MainWindow
 		rdbtnmntmCampionato.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				cambiaTipoClassifica();
+				//cambiaTipoClassifica();
 			}
 		});
 		buttonGroup.add(rdbtnmntmCampionato);
@@ -328,7 +328,7 @@ public class MainWindow
 		menuItemVersione.setEnabled(false);
 		menuItemVersione.setText("Versione: "+VERSIONE);
 		popupMenu_3.add(menuItemVersione);
-		cambiaTipoClassifica();
+		//cambiaTipoClassifica();
 	}
 
 	protected void cambiaTipoClassifica() 
