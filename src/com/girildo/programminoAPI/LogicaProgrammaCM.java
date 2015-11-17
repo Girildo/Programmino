@@ -99,7 +99,7 @@ public class LogicaProgrammaCM extends LogicaProgramma
 							listaAutoriCheHannoVotato.add(c.getAutore());
 						
 						classificaGenerale.get(parseID).aumentaVoti(1);
-						switch (tipoVoto) //Definisce la classifica da recuperare
+						switch (tipoVoto) //Definisce la classifica da recuperare (T; E; O)
 						{
 							case 'T':
 								if(votateNelCommentoTecn.contains(fotoVotata))
@@ -193,6 +193,7 @@ public class LogicaProgrammaCM extends LogicaProgramma
 			Pattern pattern = Pattern.compile("(# ?\\d{1,2})+");
 			for(String s : split)
 			{
+				s = s.trim();
 				if(s.isEmpty())
 					continue;
 				
@@ -202,9 +203,9 @@ public class LogicaProgrammaCM extends LogicaProgramma
 					c.setTipo(TipoCommento.STARTVOTING);
 				}
 				
-				if(s.matches("[TEOteo] ?:? ?(# ?\\d{1,2} ?)")) //per beccare le votazioni
+				if(s.matches(" *[TEOteo] ?:? ?(# ?\\d{1,2} ?) *")) //per beccare le votazioni
 					builder.append(s.replace(" ", "").trim()+"!");
-				else if(s.matches("[TEOteo] ?:? ?(# ?\\d{1,2} ?) ?STOP *")) //per beccare le votazioni con stop
+				else if(s.matches(" *[TEOteo] ?:? ?(# ?\\d{1,2} ?) ?STOP *")) //per beccare le votazioni con stop
 					builder.append(s.replace("STOP", "").replace(" ", "").trim()+"!");
 				else //per beccare le foto
 				{
