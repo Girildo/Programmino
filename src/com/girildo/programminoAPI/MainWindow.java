@@ -78,7 +78,7 @@ public class MainWindow
 	 * Launch the application.
 	 */
 	
-	private static String VERSIONE = "2.0.3 (17.11.2015)";
+	private static String VERSIONE = "2.0.4 (3.2.2016)";
 	private JPopupMenu popupMenu_3;
 	private JMenuItem menuItemVersione;
 	private JMenuBar menuBar;

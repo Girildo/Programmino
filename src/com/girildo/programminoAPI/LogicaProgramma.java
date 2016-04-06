@@ -42,7 +42,7 @@ public abstract class LogicaProgramma
         }
         catch(FlickrException ex)
 		{
-			if(ex.getErrorCode().equalsIgnoreCase("1"))
+        	if(ex.getErrorCode().equalsIgnoreCase("1"))
 				return new Messaggio("Non ho trovato un topic di Flickr valido a quel link."
 						+ "\nAssicurati di aver copiato l'URL per intero", FlagMessaggio.ERRORE);
 			return new Messaggio("C'è un problema con FlickR...", FlagMessaggio.ERRORE);

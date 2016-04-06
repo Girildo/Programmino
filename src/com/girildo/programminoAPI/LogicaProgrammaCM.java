@@ -69,7 +69,7 @@ public class LogicaProgrammaCM extends LogicaProgramma
 				if(split.length < 3*numPreferenze)
 				{
 					return new Messaggio("La votazione di "+ c.getAutore().getNome() +
-							" sembra avere meno di "+ 3*numPreferenze +"voti", FlagMessaggio.ERRORE);
+							" sembra avere meno di "+ 3*numPreferenze +" voti", FlagMessaggio.ERRORE);
 				}
 				
 				for(String s:split)
@@ -197,7 +197,7 @@ public class LogicaProgrammaCM extends LogicaProgramma
 				if(s.isEmpty())
 					continue;
 				
-				if(s.matches("Esempio di votazione:"))			
+				if(s.matches("Esempio di votazione:*.+"))			
 				{
 					Commento.Voting = true;
 					c.setTipo(TipoCommento.STARTVOTING);
