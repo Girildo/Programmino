@@ -59,6 +59,11 @@ public abstract class LogicaProgramma
         	{
         		break;
         	}
+        	Pattern p2 = Pattern.compile("<img class.+alt=\"THE WINNER\" />");
+        	if(p2.matcher(reply.getMessage()).find())
+        	{
+        		break;
+        	}
         	Commento commento = new Commento(reply.getMessage(), new Autore(reply.getAuthorname(), reply.getAuthorId()));
         	listaCommentiSporchi.add(commento);
         }

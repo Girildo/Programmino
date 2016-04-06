@@ -30,7 +30,6 @@ public class LogicaProgrammaSG extends LogicaProgramma
 		dictionaryFoto = new HashMap<Integer, Foto>();
 		listaAutoVoto = new ArrayList<Autore>();
 		listaAutoriCheHannoVotato = new ArrayList<Autore>();
-		
 		ArrayList<Commento> commentiConErrori = new ArrayList<Commento>(); //lista che contiene i commenti con meno preferenze dell'imp.
 		for(Commento c:listaCommenti)
 		{
@@ -154,10 +153,11 @@ public class LogicaProgrammaSG extends LogicaProgramma
 			Pattern pattern = Pattern.compile("(# ?\\d{1,2})+");
 			for(String s : split)
 			{
+				s=s.trim();
 				if(s.isEmpty())
 					continue;
 				
-				if(s.matches("#{6,100}"))			
+				if(s.matches("#{6,100}"))	
 				{
 					Commento.Voting = true;
 					tipoNuovo = TipoCommento.STARTVOTING;
@@ -182,6 +182,6 @@ public class LogicaProgrammaSG extends LogicaProgramma
 			System.out.println(cd.getTipo());
 			listaCommenti.add(cd);
 		}
-		return listaCommenti.size() == listaCommentiSporchi.size();
+		return listaCommenti.size() == listaCommentiSporchi.size() && Commento.Voting;
 	}
 }

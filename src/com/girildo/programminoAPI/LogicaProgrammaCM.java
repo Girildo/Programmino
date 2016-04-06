@@ -12,30 +12,30 @@ import com.girildo.programminoAPI.Messaggio.FlagMessaggio;
 
 
 
-public class LogicaProgrammaCM extends LogicaProgramma 
-{	
+public class LogicaProgrammaCM extends LogicaProgramma
+{
 	@Override
-	public Messaggio GeneraClassifica(int numPreferenze) 
+	public Messaggio GeneraClassifica(int numPreferenze)
 	{
 		HashMap<Integer, Foto> dictionaryFoto = new HashMap<Integer, Foto>();
 		HashMap<Integer, Foto> classificaGenerale = new HashMap<Integer, Foto>();
 		HashMap<Integer, Foto> classificaTecn = new HashMap<Integer, Foto>();
 		HashMap<Integer, Foto> classificaEspr = new HashMap<Integer, Foto>();
 		HashMap<Integer, Foto> classificaOrig = new HashMap<Integer, Foto>();
-		
+
 		ArrayList<Autore> listaAutoriCheHannoVotato = new ArrayList<Autore>();
 		ArrayList<Autore> listaAutoriConAutovoto = new ArrayList<Autore>();
 		ArrayList<Commento> commentiConErrore = new ArrayList<Commento>();
-		
+
 		for(Commento c:listaCommenti)
 		{
 			ArrayList<Foto> votateNelCommentoTecn = new ArrayList<Foto>();
 			ArrayList<Foto> votateNelCommentoEspr = new ArrayList<Foto>();
 			ArrayList<Foto> votateNelCommentoOrig = new ArrayList<Foto>();
-			
+
 			if(c.getTipo() == TipoCommento.IGNORA)
 				continue;
-			
+
 			else if (c.getTipo() == TipoCommento.STARTVOTING) //popola le classifiche con le foto
 			{
 				for(Foto f:dictionaryFoto.values())
@@ -46,8 +46,8 @@ public class LogicaProgrammaCM extends LogicaProgramma
 					classificaOrig.put(f.getID(), f.clonaFoto());
 				}
 			}
-			
-			
+
+
 			else if(c.getTipo() == TipoCommento.FOTO)
 			{
 				try
@@ -61,8 +61,8 @@ public class LogicaProgrammaCM extends LogicaProgramma
 							+ "ho trovato un errore nel numero", FlagMessaggio.ERRORE);
 				}
 			}
-			
-			
+
+
 			else if(c.getTipo() == TipoCommento.VOTAZIONE)
 			{
 				String[] split = c.getTesto().split("!");
@@ -71,33 +71,34 @@ public class LogicaProgrammaCM extends LogicaProgramma
 					return new Messaggio("La votazione di "+ c.getAutore().getNome() +
 							" sembra avere meno di "+ 3*numPreferenze +" voti", FlagMessaggio.ERRORE);
 				}
-				
+
 				for(String s:split)
 				{
 					//System.out.println("qui");
+					s = s.trim();
 					if(!s.matches("[teoTEO] ?:? ?# ?\\d{1,2} ?"))
-						return new Messaggio("La votazione di " + c.getAutore().getNome() + 
+						return new Messaggio("La votazione di " + c.getAutore().getNome() +
 								" sembra avere un errore di formato", FlagMessaggio.ERRORE);
 					else
 					{
 						String testo = s.replace(":", "").replace(" ", ""); //pulisce la stringa iterata da : e spazi
 						char tipoVoto = Character.toUpperCase(testo.charAt(0)); //Salva per reference il primo carattere
-						testo = testo.substring(2);	//rimuove il primo carattere e il cancelletto			
+						testo = testo.substring(2);	//rimuove il primo carattere e il cancelletto
 						int parseID = Integer.parseInt(testo);
 						Foto fotoVotata = dictionaryFoto.get(parseID);
-						
+
 						if(fotoVotata == null)
 							return new Messaggio(c.getAutore().getNome()+" ha votato una foto che non esiste"
 									, FlagMessaggio.ERRORE);
-						
+
 						if(fotoVotata.getAutore().equals(c.getAutore())) //se l'autore della foto è lo stesso del commenot
 						{
 							listaAutoriConAutovoto.add(c.getAutore()); //c'è autovoto
 						}
-						
+
 						if(!listaAutoriCheHannoVotato.contains(c.getAutore()))
 							listaAutoriCheHannoVotato.add(c.getAutore());
-						
+
 						classificaGenerale.get(parseID).aumentaVoti(1);
 						switch (tipoVoto) //Definisce la classifica da recuperare (T; E; O)
 						{
@@ -122,7 +123,7 @@ public class LogicaProgrammaCM extends LogicaProgramma
 								classificaOrig.get(parseID).aumentaVoti(1);
 								votateNelCommentoOrig.add(fotoVotata);
 								break;
-						}	
+						}
 					}
 				}
 			}
@@ -133,9 +134,9 @@ public class LogicaProgrammaCM extends LogicaProgramma
 		StringBuilder builderClassifica = new StringBuilder();
 		StringBuilder builderNonVotanti = new StringBuilder("Non hanno votato: \n");
 		StringBuilder builderAutoVoto = new StringBuilder("Si sono autovotati: \n");
-		
+
 		FlagMessaggio flagXMessaggio = FlagMessaggio.NESSUN_ERRORE;
-		
+
 		for(Foto f:listaOrdinataPerClassifica)
 		{
 			if(!listaAutoriCheHannoVotato.contains(f.getAutore()))
@@ -162,17 +163,17 @@ public class LogicaProgrammaCM extends LogicaProgramma
 		builderClassifica.append("Hanno votato in "+listaAutoriCheHannoVotato.size()+"\n");
 		builderClassifica.append("Si sono autovotati in "+listaAutoriConAutovoto.size()+"\n");
 		builderClassifica.append("Voti con errore: "+commentiConErrore.size()+"\n");
-		
+
 		if(listaAutoriConAutovoto.size() == 0)
 			builderAutoVoto.delete(0, builderAutoVoto.length());
-		
-		
+
+
 		return new Messaggio(builderClassifica.toString(), flagXMessaggio
 				, builderNonVotanti.toString()+builderAutoVoto.toString());
 	}
 
 	@Override
-	protected boolean pulisciCommenti(ArrayList<Commento> commentiSporchi) 
+	protected boolean pulisciCommenti(ArrayList<Commento> commentiSporchi)
 	{
 		super.listaCommenti = new ArrayList<Commento>();
 		for(Commento c : commentiSporchi)
@@ -189,20 +190,20 @@ public class LogicaProgrammaCM extends LogicaProgramma
 			}
 			testo = testo.replaceAll("<a.+\\/><\\/a>", "");
 			String[] split = testo.split("\n");
-			StringBuilder builder = new StringBuilder(); 
+			StringBuilder builder = new StringBuilder();
 			Pattern pattern = Pattern.compile("(# ?\\d{1,2})+");
 			for(String s : split)
 			{
 				s = s.trim();
 				if(s.isEmpty())
 					continue;
-				
-				if(s.matches("Esempio di votazione:*.+"))			
+
+				if(s.matches("Esempio di votazione:"))
 				{
 					Commento.Voting = true;
 					c.setTipo(TipoCommento.STARTVOTING);
 				}
-				
+
 				if(s.matches(" *[TEOteo] ?:? ?(# ?\\d{1,2} ?) *")) //per beccare le votazioni
 					builder.append(s.replace(" ", "").trim()+"!");
 				else if(s.matches(" *[TEOteo] ?:? ?(# ?\\d{1,2} ?) ?STOP *")) //per beccare le votazioni con stop

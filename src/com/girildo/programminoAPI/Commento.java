@@ -18,6 +18,8 @@ public class Commento
 	
 	public void AggiornaTipo(TipoLogica logica)
 	{
+		if(tipo == TipoCommento.IGNORA)
+			return;
 		if(logica == TipoLogica.LOGICA_SG)
 		{
 			if(this.tipo != TipoCommento.STARTVOTING)
