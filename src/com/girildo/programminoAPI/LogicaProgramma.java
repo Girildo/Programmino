@@ -47,6 +47,10 @@ public abstract class LogicaProgramma
 						+ "\nAssicurati di aver copiato l'URL per intero", FlagMessaggio.ERRORE);
 			return new Messaggio("C'è un problema con FlickR...", FlagMessaggio.ERRORE);
 		}
+        catch(Exception ex2)
+        {
+        	return new Messaggio(ex2.getLocalizedMessage(), FlagMessaggio.ERRORE);
+        }
         if (repList == null)
         	return new Messaggio("Errore sconosciuto (RepList null)", FlagMessaggio.ERRORE);
         
