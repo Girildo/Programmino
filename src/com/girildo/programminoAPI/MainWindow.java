@@ -37,6 +37,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import com.girildo.programminoAPI.Messaggio.FlagMessaggio;
+import com.girildo.programminoAPI.StartUpManager.PrefsBundle;
+import com.girildo.programminoAPI.LogicaProgramma.TipoLogica;
 
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.FocusAdapter;
@@ -45,14 +47,19 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.ButtonGroup;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class MainWindow
 {
+	//CUSTOM FIELDS
+	private StartUpManager sUpManager;
+	private LogicaProgramma logica;
+
 
 	private JFrame frmProgramminoSoniagallery;
 	private JTextField textFieldLink;
 	private JLabel lblLink;
-	private LogicaProgramma logica;
 	private JPopupMenu popupMenu;
 	private JMenuItem mntmIncolla;
 	private JPanel panel_1;
@@ -77,8 +84,8 @@ public class MainWindow
 	/**
 	 * Launch the application.
 	 */
-	
-	private static String VERSIONE = "2.0.5 (6.04.2016)";
+
+	private static String VERSIONE = "2.1.0 (05.08.2016)";
 	private JPopupMenu popupMenu_3;
 	private JMenuItem menuItemVersione;
 	private JMenuBar menuBar;
@@ -86,7 +93,7 @@ public class MainWindow
 	private JRadioButtonMenuItem rdbtnmntmSoniaGallery;
 	private JRadioButtonMenuItem rdbtnmntmCampionato;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-	
+
 	public static void main(String[] args)
 	{
 		EventQueue.invokeLater(new Runnable()
@@ -143,10 +150,10 @@ public class MainWindow
 		panel.add(lblLink, gbc_lblLink);
 
 		textFieldLink = new JTextField();
-		
+
 		popupMenu = new JPopupMenu();
 		addPopup(textFieldLink, popupMenu);
-		
+
 		mntmIncolla = new JMenuItem("Incolla");
 		mntmIncolla.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
@@ -177,9 +184,9 @@ public class MainWindow
 		gbc_btnOttieniCommenti.gridx = 2;
 		gbc_btnOttieniCommenti.gridy = 0;
 		panel.add(btnOttieniCommenti, gbc_btnOttieniCommenti);
-		
+
 		btnGeneraClassifica = new JButton("Genera classifica");
-		
+
 		btnGeneraClassifica.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
@@ -192,51 +199,51 @@ public class MainWindow
 		gbc_btnGeneraClassifica.gridx = 3;
 		gbc_btnGeneraClassifica.gridy = 0;
 		panel.add(btnGeneraClassifica, gbc_btnGeneraClassifica);
-		
+
 		panel_1 = new JPanel();
 		frmProgramminoSoniagallery.getContentPane().add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new MigLayout("", "[grow,fill][grow,fill][grow,fill]", "[grow,fill]"));
-		
+
 		verticalBox = Box.createVerticalBox();
 		verticalBox.setBorder(new TitledBorder(null, "Foto trovate", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.add(verticalBox, "cell 0 0,width 33%,grow");
-		
+
 		scrollPane = new JScrollPane();
 		scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 		verticalBox.add(scrollPane);
-		
+
 		textAreaFoto = new JTextArea();
 		textAreaFoto.setEditable(false);
 		scrollPane.setViewportView(textAreaFoto);
-		
+
 		verticalBox_1 = Box.createVerticalBox();
 		verticalBox_1.setBorder(new TitledBorder(null, "Classifica", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panel_1.add(verticalBox_1, "cell 1 0,width 33%,grow");
-		
+
 		scrollPaneClassifica = new JScrollPane();
 		scrollPaneClassifica.setAlignmentX(Component.LEFT_ALIGNMENT);
 		verticalBox_1.add(scrollPaneClassifica);
-		
+
 		textAreaClassifica = new JTextArea();
-		
+
 		textAreaClassifica.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) 
 			{
-//				textAreaClassifica.setSelectionStart(0);
-//				textAreaClassifica.setSelectionEnd(textAreaClassifica.getText().length());
+				//				textAreaClassifica.setSelectionStart(0);
+				//				textAreaClassifica.setSelectionEnd(textAreaClassifica.getText().length());
 				textAreaClassifica.selectAll();
 			}
-			
+
 		});
-		
-		
+
+
 		textAreaClassifica.setEditable(false);
 		scrollPaneClassifica.setViewportView(textAreaClassifica);
-		
+
 		popupMenu_1 = new JPopupMenu();
 		addPopup(textAreaClassifica, popupMenu_1);
-		
+
 		menuItemCopia = new JMenuItem("Copia");
 		menuItemCopia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
@@ -246,19 +253,27 @@ public class MainWindow
 		});
 		menuItemCopia.setEnabled(false);
 		popupMenu_1.add(menuItemCopia);
-		
+
 		verticalBox_2 = Box.createVerticalBox();
 		verticalBox_2.setBorder(null);
 		panel_1.add(verticalBox_2, "cell 2 0,width 33%,grow");
-		
+
 		horizontalBox = Box.createHorizontalBox();
 		horizontalBox.setBorder(new TitledBorder(null, "Impostazioni", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		verticalBox_2.add(horizontalBox);
-		
+
 		lblNewLabel = new JLabel("# Voti");
 		horizontalBox.add(lblNewLabel);
-		
+
 		slider = new JSlider();
+		slider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				JSlider source = (JSlider)e.getSource();
+		        if (!source.getValueIsAdjusting()) {
+		            updatePrefs();
+		        }  
+			}
+		});
 		slider.setMinimum(1);
 		slider.setSnapToTicks(true);
 		slider.setPaintTicks(true);
@@ -267,24 +282,24 @@ public class MainWindow
 		slider.setPaintLabels(true);
 		slider.setMajorTickSpacing(1);
 		horizontalBox.add(slider);
-		
+
 		verticalBox_3 = Box.createVerticalBox();
 		verticalBox_3.setBorder(new TitledBorder(null, "Errori", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		verticalBox_2.add(verticalBox_3);
-		
+
 		scrollPane_2 = new JScrollPane();
 		verticalBox_3.add(scrollPane_2);
-		
+
 		textAreaErrori = new JTextArea();
 		textAreaErrori.setForeground(new Color(204, 0, 0));
 		textAreaErrori.setWrapStyleWord(true);
 		textAreaErrori.setLineWrap(true);
 		textAreaErrori.setEditable(false);
 		scrollPane_2.setViewportView(textAreaErrori);
-		
+
 		popupMenu_2 = new JPopupMenu();
 		addPopup(textAreaErrori, popupMenu_2);
-		
+
 		mntmCopiaPerErrori = new JMenuItem("Copia");
 		mntmCopiaPerErrori.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
@@ -293,13 +308,13 @@ public class MainWindow
 			}
 		});
 		popupMenu_2.add(mntmCopiaPerErrori);
-		
+
 		menuBar = new JMenuBar();
 		frmProgramminoSoniagallery.setJMenuBar(menuBar);
-		
+
 		mnImpostazioni = new JMenu("Impostazioni");
 		menuBar.add(mnImpostazioni);
-		
+
 		rdbtnmntmSoniaGallery = new JRadioButtonMenuItem("Sonia Gallery");
 		rdbtnmntmSoniaGallery.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) 
@@ -309,35 +324,68 @@ public class MainWindow
 		});
 		buttonGroup.add(rdbtnmntmSoniaGallery);
 		mnImpostazioni.add(rdbtnmntmSoniaGallery);
-		
+
 		rdbtnmntmCampionato = new JRadioButtonMenuItem("Campionato");
 		rdbtnmntmCampionato.setSelected(true);
 		rdbtnmntmCampionato.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				//cambiaTipoClassifica();
+				cambiaTipoClassifica();
 			}
 		});
 		buttonGroup.add(rdbtnmntmCampionato);
 		mnImpostazioni.add(rdbtnmntmCampionato);
-		
+
 		popupMenu_3 = new JPopupMenu();
 		addPopup(frmProgramminoSoniagallery, popupMenu_3);
-		
+
 		menuItemVersione = new JMenuItem("New menu item");
 		menuItemVersione.setEnabled(false);
 		menuItemVersione.setText("Versione: "+VERSIONE);
 		popupMenu_3.add(menuItemVersione);
 		//cambiaTipoClassifica();
+		sUpManager = new StartUpManager();
+		PrefsBundle bundle = sUpManager.getDefaultPrefs();
+		slider.setValue(bundle.getPrefsNumber());
+
+		switch(bundle.getTipo())
+		{
+		case LOGICA_SG:
+			rdbtnmntmSoniaGallery.setSelected(true);
+			break;
+		case LOGICA_CM:
+			rdbtnmntmCampionato.setSelected(true);
+			break;
+		}	
 	}
 
 	protected void cambiaTipoClassifica() 
 	{
 		//slider.setEnabled(rdbtnmntmSoniaGallery.isSelected());
 		slider.setEnabled(true);
+		updatePrefs();
 		this.reset();
 	}
 
+	private void updatePrefs() 
+	{
+		if(this.sUpManager == null)
+			return;
+		System.out.println("updatePrefs");
+		PrefsBundle bundle = sUpManager.new PrefsBundle(determinaTipoLogica(), slider.getValue());
+		sUpManager.setDefaultPrefs(bundle);
+	}
+
+	private TipoLogica determinaTipoLogica()
+	{
+		if(rdbtnmntmSoniaGallery.isSelected())
+			return TipoLogica.LOGICA_SG;
+		else if(rdbtnmntmCampionato.isSelected())
+			return TipoLogica.LOGICA_CM;
+		else
+			return null;
+	}
+	
 	protected void generaClassificaOnClick()
 	{
 		Messaggio mess = logica.GeneraClassifica(this.slider.getValue());
@@ -370,11 +418,11 @@ public class MainWindow
 		else
 			return;
 		this.reset();
-		
+
 		final DialogWait dial = new DialogWait(this.frmProgramminoSoniagallery);
 		dial.setLocationRelativeTo(this.frmProgramminoSoniagallery);
 		dial.setVisible(true);
-		
+
 		SwingWorker<Void, Void> task = new SwingWorker<Void,Void>()
 		{
 			@Override
@@ -425,7 +473,7 @@ public class MainWindow
 			}
 		});
 	}
-	
+
 	private void incolla()
 	{
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();

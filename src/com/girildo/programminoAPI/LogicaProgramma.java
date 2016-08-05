@@ -16,9 +16,8 @@ public abstract class LogicaProgramma
 {
 	protected final static String KEY = "00b9cc2a3bf5e2896905d1fd621a20eb";
 	protected final static String SECRET = "a5be5f21bd03edc2";
-	public enum TipoLogica {LOGICA_SG, LOGICA_CM}
 	protected ArrayList<Commento> listaCommenti;
-	
+	public enum TipoLogica {LOGICA_SG, LOGICA_CM}
 	public LogicaProgramma()
 	{
 		Commento.resetVotingFlag();
