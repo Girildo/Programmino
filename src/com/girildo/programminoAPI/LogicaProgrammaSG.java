@@ -157,10 +157,11 @@ public class LogicaProgrammaSG extends LogicaProgramma
 				if(s.isEmpty())
 					continue;
 				
-				if(s.matches("#{6,100}"))	
+				if(s.matches("#{6,100}"))
 				{
 					Commento.Voting = true;
 					tipoNuovo = TipoCommento.STARTVOTING;
+					break;
 				}
 				
 				if(s.matches("(# ?\\d{1,2})+"))

@@ -371,7 +371,6 @@ public class MainWindow
 	{
 		if(this.sUpManager == null)
 			return;
-		System.out.println("updatePrefs");
 		PrefsBundle bundle = sUpManager.new PrefsBundle(determinaTipoLogica(), slider.getValue());
 		sUpManager.setDefaultPrefs(bundle);
 	}
