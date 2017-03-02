@@ -71,7 +71,7 @@ public class MainWindow
 	private Box verticalBox_3;
 	private JScrollPane scrollPane_2;
 	private JTextArea textAreaErrori;
-	private Box horizontalBox;
+	private Box sliderBox;
 	private JLabel lblNewLabel;
 	private JSlider slider;
 	private JButton btnGeneraClassifica;
@@ -85,7 +85,7 @@ public class MainWindow
 	 * Launch the application.
 	 */
 
-	private static String VERSIONE = "2.1.0 (05.08.2016)";
+	private static String VERSIONE = "3.0.0 (02.03.2017)";
 	private JPopupMenu popupMenu_3;
 	private JMenuItem menuItemVersione;
 	private JMenuBar menuBar;
@@ -93,6 +93,9 @@ public class MainWindow
 	private JRadioButtonMenuItem rdbtnmntmSoniaGallery;
 	private JRadioButtonMenuItem rdbtnmntmCampionato;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JRadioButtonMenuItem rdbtnmntmCampionatoSegreto;
+	private JLabel lblFile;
+	private JTextField textField;
 
 	public static void main(String[] args)
 	{
@@ -135,15 +138,15 @@ public class MainWindow
 		frmProgramminoSoniagallery.getContentPane().add(panel, BorderLayout.NORTH);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] {0, 689, 117, 117, 0};
-		gbl_panel.rowHeights = new int[] {29};
+		gbl_panel.rowHeights = new int[] {29, 0};
 		gbl_panel.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0};
 		panel.setLayout(gbl_panel);
 
 		lblLink = new JLabel("Link:");
 		lblLink.setHorizontalAlignment(SwingConstants.RIGHT);
 		GridBagConstraints gbc_lblLink = new GridBagConstraints();
-		gbc_lblLink.insets = new Insets(0, 0, 0, 5);
+		gbc_lblLink.insets = new Insets(0, 0, 5, 5);
 		gbc_lblLink.anchor = GridBagConstraints.EAST;
 		gbc_lblLink.gridx = 0;
 		gbc_lblLink.gridy = 0;
@@ -165,7 +168,7 @@ public class MainWindow
 		GridBagConstraints gbc_textFieldLink = new GridBagConstraints();
 		gbc_textFieldLink.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldLink.anchor = GridBagConstraints.NORTH;
-		gbc_textFieldLink.insets = new Insets(0, 0, 0, 5);
+		gbc_textFieldLink.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldLink.gridx = 1;
 		gbc_textFieldLink.gridy = 0;
 		panel.add(textFieldLink, gbc_textFieldLink);
@@ -179,7 +182,7 @@ public class MainWindow
 		});
 		btnOttieniCommenti.setHorizontalAlignment(SwingConstants.LEADING);
 		GridBagConstraints gbc_btnOttieniCommenti = new GridBagConstraints();
-		gbc_btnOttieniCommenti.insets = new Insets(0, 0, 0, 5);
+		gbc_btnOttieniCommenti.insets = new Insets(0, 0, 5, 5);
 		gbc_btnOttieniCommenti.anchor = GridBagConstraints.NORTHEAST;
 		gbc_btnOttieniCommenti.gridx = 2;
 		gbc_btnOttieniCommenti.gridy = 0;
@@ -196,9 +199,27 @@ public class MainWindow
 		});
 		btnGeneraClassifica.setEnabled(false);
 		GridBagConstraints gbc_btnGeneraClassifica = new GridBagConstraints();
+		gbc_btnGeneraClassifica.insets = new Insets(0, 0, 5, 0);
 		gbc_btnGeneraClassifica.gridx = 3;
 		gbc_btnGeneraClassifica.gridy = 0;
 		panel.add(btnGeneraClassifica, gbc_btnGeneraClassifica);
+		
+		lblFile = new JLabel("File:");
+		lblFile.setHorizontalAlignment(SwingConstants.RIGHT);
+		GridBagConstraints gbc_lblFile = new GridBagConstraints();
+		gbc_lblFile.anchor = GridBagConstraints.EAST;
+		gbc_lblFile.insets = new Insets(0, 0, 0, 5);
+		gbc_lblFile.gridx = 0;
+		gbc_lblFile.gridy = 1;
+		panel.add(lblFile, gbc_lblFile);
+		
+		textField = new JTextField();
+		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.insets = new Insets(0, 0, 0, 5);
+		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField.gridx = 1;
+		gbc_textField.gridy = 1;
+		panel.add(textField, gbc_textField);
 
 		panel_1 = new JPanel();
 		frmProgramminoSoniagallery.getContentPane().add(panel_1, BorderLayout.CENTER);
@@ -258,12 +279,12 @@ public class MainWindow
 		verticalBox_2.setBorder(null);
 		panel_1.add(verticalBox_2, "cell 2 0,width 33%,grow");
 
-		horizontalBox = Box.createHorizontalBox();
-		horizontalBox.setBorder(new TitledBorder(null, "Impostazioni", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		verticalBox_2.add(horizontalBox);
+		sliderBox = Box.createHorizontalBox();
+		sliderBox.setBorder(new TitledBorder(null, "Impostazioni", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		verticalBox_2.add(sliderBox);
 
 		lblNewLabel = new JLabel("# Voti");
-		horizontalBox.add(lblNewLabel);
+		sliderBox.add(lblNewLabel);
 
 		slider = new JSlider();
 		slider.addChangeListener(new ChangeListener() {
@@ -281,7 +302,7 @@ public class MainWindow
 		slider.setValue(3);
 		slider.setPaintLabels(true);
 		slider.setMajorTickSpacing(1);
-		horizontalBox.add(slider);
+		sliderBox.add(slider);
 
 		verticalBox_3 = Box.createVerticalBox();
 		verticalBox_3.setBorder(new TitledBorder(null, "Errori", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -335,6 +356,15 @@ public class MainWindow
 		});
 		buttonGroup.add(rdbtnmntmCampionato);
 		mnImpostazioni.add(rdbtnmntmCampionato);
+		
+		rdbtnmntmCampionatoSegreto = new JRadioButtonMenuItem("Campionato Segreto");
+		rdbtnmntmCampionatoSegreto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cambiaTipoClassifica();
+			}
+		});
+		buttonGroup.add(rdbtnmntmCampionatoSegreto);
+		mnImpostazioni.add(rdbtnmntmCampionatoSegreto);
 
 		popupMenu_3 = new JPopupMenu();
 		addPopup(frmProgramminoSoniagallery, popupMenu_3);
@@ -356,14 +386,21 @@ public class MainWindow
 		case LOGICA_CM:
 			rdbtnmntmCampionato.setSelected(true);
 			break;
+		case Logica_CMS:
+			rdbtnmntmCampionatoSegreto.setSelected(true);
+			break;
+		default:
+			break;
 		}	
 	}
 
 	protected void cambiaTipoClassifica() 
 	{
 		//slider.setEnabled(rdbtnmntmSoniaGallery.isSelected());
-		slider.setEnabled(true);
+		slider.setEnabled(!rdbtnmntmCampionatoSegreto.isSelected());
 		updatePrefs();
+		sliderBox.setVisible(!rdbtnmntmCampionatoSegreto.isSelected());
+		((Box)sliderBox.getParent()).revalidate();
 		this.reset();
 	}
 
@@ -381,6 +418,8 @@ public class MainWindow
 			return TipoLogica.LOGICA_SG;
 		else if(rdbtnmntmCampionato.isSelected())
 			return TipoLogica.LOGICA_CM;
+		else if(rdbtnmntmCampionatoSegreto.isSelected())
+			return TipoLogica.Logica_CMS;
 		else
 			return null;
 	}
