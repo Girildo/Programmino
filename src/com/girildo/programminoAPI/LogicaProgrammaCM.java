@@ -1,5 +1,6 @@
 package com.girildo.programminoAPI;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import com.girildo.programminoAPI.Messaggio.FlagMessaggio;
 public class LogicaProgrammaCM extends LogicaProgramma
 {
 	@Override
-	public Messaggio GeneraClassifica(int numPreferenze)
+	public Messaggio GeneraClassifica(int numPreferenze, File file)
 	{
 		HashMap<Integer, Foto> dictionaryFoto = new HashMap<Integer, Foto>();
 		HashMap<Integer, Foto> classificaGenerale = new HashMap<Integer, Foto>();

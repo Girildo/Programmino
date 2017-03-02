@@ -1,5 +1,6 @@
 package com.girildo.programminoAPI;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class LogicaProgrammaSG extends LogicaProgramma
 	List<Autore> listaAutoVoto, listaAutoriCheHannoVotato;
 	
 	@Override
-	public Messaggio GeneraClassifica(int numPreferenze)
+	public Messaggio GeneraClassifica(int numPreferenze, File file)
 	{
 		dictionaryFoto = new HashMap<Integer, Foto>();
 		listaAutoVoto = new ArrayList<Autore>();

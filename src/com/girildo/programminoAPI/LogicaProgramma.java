@@ -1,5 +1,6 @@
 package com.girildo.programminoAPI;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,7 +18,7 @@ public abstract class LogicaProgramma
 	protected final static String KEY = "00b9cc2a3bf5e2896905d1fd621a20eb";
 	protected final static String SECRET = "a5be5f21bd03edc2";
 	protected ArrayList<Commento> listaCommenti;
-	public enum TipoLogica {LOGICA_SG, LOGICA_CM, Logica_CMS}
+	public enum TipoLogica {LOGICA_SG, LOGICA_CM, LOGICA_CMS}
 	public LogicaProgramma()
 	{
 		Commento.resetVotingFlag();
@@ -100,7 +101,7 @@ public abstract class LogicaProgramma
 	        return builder.toString();
 	}
 	
-	public abstract Messaggio GeneraClassifica(int numPreferenze);
+	public abstract Messaggio GeneraClassifica(int numPreferenze, File file);
 	protected abstract boolean pulisciCommenti(ArrayList<Commento> commentiSporchi);
 	
 }
