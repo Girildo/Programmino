@@ -5,9 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -16,18 +13,28 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -35,34 +42,27 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import com.girildo.programminoAPI.LogicaProgramma.TipoLogica;
 import com.girildo.programminoAPI.Messaggio.FlagMessaggio;
 import com.girildo.programminoAPI.StartUpManager.PrefsBundle;
-import com.girildo.programminoAPI.LogicaProgramma.TipoLogica;
 
 import net.miginfocom.swing.MigLayout;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.ButtonGroup;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 public class MainWindow
 {
 	//CUSTOM FIELDS
 	private StartUpManager sUpManager;
 	private LogicaProgramma logica;
+	private File filePerVotoSegreto;
 
 
 	private JFrame frmProgramminoSoniagallery;
 	private JTextField textFieldLink;
 	private JLabel lblLink;
-	private JPopupMenu popupMenu;
-	private JMenuItem mntmIncolla;
-	private JPanel panel_1;
+	private JPanel lowerPanel;
 	private Box verticalBox;
 	private Box verticalBox_1;
 	private Box verticalBox_2;
@@ -94,8 +94,15 @@ public class MainWindow
 	private JRadioButtonMenuItem rdbtnmntmCampionato;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JRadioButtonMenuItem rdbtnmntmCampionatoSegreto;
+	private JSeparator separator;
+	private Box horizontalBox;
+	private Box horizontalBoxFile;
 	private JLabel lblFile;
-	private JTextField textField;
+	private JTextField textFieldFile;
+	private Box verticalBox_4;
+	private JPopupMenu popupMenu;
+	private JMenuItem menuItem;
+	private JButton btnNewButton;
 
 	public static void main(String[] args)
 	{
@@ -133,47 +140,37 @@ public class MainWindow
 		frmProgramminoSoniagallery.setBounds(100, 100, 806, 522);
 		frmProgramminoSoniagallery.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		JPanel panel = new JPanel();
-		panel.setBorder(new EmptyBorder(6, 6, 6, 6));
-		frmProgramminoSoniagallery.getContentPane().add(panel, BorderLayout.NORTH);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[] {0, 689, 117, 117, 0};
-		gbl_panel.rowHeights = new int[] {29, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0};
-		panel.setLayout(gbl_panel);
+		JPanel upperPanel = new JPanel();
+		upperPanel.setBorder(new EmptyBorder(6, 6, 6, 6));
+		frmProgramminoSoniagallery.getContentPane().add(upperPanel, BorderLayout.NORTH);
+		upperPanel.setLayout(new BoxLayout(upperPanel, BoxLayout.X_AXIS));
+
+		verticalBox_4 = Box.createVerticalBox();
+		upperPanel.add(verticalBox_4);
+
+		horizontalBox = Box.createHorizontalBox();
+		verticalBox_4.add(horizontalBox);
 
 		lblLink = new JLabel("Link:");
+		horizontalBox.add(lblLink);
 		lblLink.setHorizontalAlignment(SwingConstants.RIGHT);
-		GridBagConstraints gbc_lblLink = new GridBagConstraints();
-		gbc_lblLink.insets = new Insets(0, 0, 5, 5);
-		gbc_lblLink.anchor = GridBagConstraints.EAST;
-		gbc_lblLink.gridx = 0;
-		gbc_lblLink.gridy = 0;
-		panel.add(lblLink, gbc_lblLink);
 
 		textFieldLink = new JTextField();
+		horizontalBox.add(textFieldLink);
 
 		popupMenu = new JPopupMenu();
 		addPopup(textFieldLink, popupMenu);
 
-		mntmIncolla = new JMenuItem("Incolla");
-		mntmIncolla.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
+		menuItem = new JMenuItem("Incolla");
+		menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 				incolla();
 			}
 		});
-		popupMenu.add(mntmIncolla);
-		GridBagConstraints gbc_textFieldLink = new GridBagConstraints();
-		gbc_textFieldLink.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldLink.anchor = GridBagConstraints.NORTH;
-		gbc_textFieldLink.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldLink.gridx = 1;
-		gbc_textFieldLink.gridy = 0;
-		panel.add(textFieldLink, gbc_textFieldLink);
+		popupMenu.add(menuItem);
 
 		JButton btnOttieniCommenti = new JButton("Ottieni commenti");
+		horizontalBox.add(btnOttieniCommenti);
 		btnOttieniCommenti.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -181,14 +178,13 @@ public class MainWindow
 			}
 		});
 		btnOttieniCommenti.setHorizontalAlignment(SwingConstants.LEADING);
-		GridBagConstraints gbc_btnOttieniCommenti = new GridBagConstraints();
-		gbc_btnOttieniCommenti.insets = new Insets(0, 0, 5, 5);
-		gbc_btnOttieniCommenti.anchor = GridBagConstraints.NORTHEAST;
-		gbc_btnOttieniCommenti.gridx = 2;
-		gbc_btnOttieniCommenti.gridy = 0;
-		panel.add(btnOttieniCommenti, gbc_btnOttieniCommenti);
+
+		separator = new JSeparator();
+		horizontalBox.add(separator);
+		separator.setOrientation(SwingConstants.VERTICAL);
 
 		btnGeneraClassifica = new JButton("Genera classifica");
+		horizontalBox.add(btnGeneraClassifica);
 
 		btnGeneraClassifica.addActionListener(new ActionListener() 
 		{
@@ -198,36 +194,32 @@ public class MainWindow
 			}
 		});
 		btnGeneraClassifica.setEnabled(false);
-		GridBagConstraints gbc_btnGeneraClassifica = new GridBagConstraints();
-		gbc_btnGeneraClassifica.insets = new Insets(0, 0, 5, 0);
-		gbc_btnGeneraClassifica.gridx = 3;
-		gbc_btnGeneraClassifica.gridy = 0;
-		panel.add(btnGeneraClassifica, gbc_btnGeneraClassifica);
-		
-		lblFile = new JLabel("File:");
-		lblFile.setHorizontalAlignment(SwingConstants.RIGHT);
-		GridBagConstraints gbc_lblFile = new GridBagConstraints();
-		gbc_lblFile.anchor = GridBagConstraints.EAST;
-		gbc_lblFile.insets = new Insets(0, 0, 0, 5);
-		gbc_lblFile.gridx = 0;
-		gbc_lblFile.gridy = 1;
-		panel.add(lblFile, gbc_lblFile);
-		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 0, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 1;
-		panel.add(textField, gbc_textField);
 
-		panel_1 = new JPanel();
-		frmProgramminoSoniagallery.getContentPane().add(panel_1, BorderLayout.CENTER);
-		panel_1.setLayout(new MigLayout("", "[grow,fill][grow,fill][grow,fill]", "[grow,fill]"));
+		horizontalBoxFile = Box.createHorizontalBox();
+		verticalBox_4.add(horizontalBoxFile);
+
+		lblFile = new JLabel(" File:");
+		lblFile.setHorizontalAlignment(SwingConstants.RIGHT);
+		horizontalBoxFile.add(lblFile);
+
+		textFieldFile = new JTextField();
+		horizontalBoxFile.add(textFieldFile);
+
+		btnNewButton = new JButton("Sfoglia...");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sfoglia();
+			}
+		});
+		horizontalBoxFile.add(btnNewButton);
+
+		lowerPanel = new JPanel();
+		frmProgramminoSoniagallery.getContentPane().add(lowerPanel, BorderLayout.CENTER);
+		lowerPanel.setLayout(new MigLayout("", "[grow,fill][grow,fill][grow,fill]", "[grow,fill]"));
 
 		verticalBox = Box.createVerticalBox();
 		verticalBox.setBorder(new TitledBorder(null, "Foto trovate", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.add(verticalBox, "cell 0 0,width 33%,grow");
+		lowerPanel.add(verticalBox, "cell 0 0,width 33%,grow");
 
 		scrollPane = new JScrollPane();
 		scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -239,7 +231,7 @@ public class MainWindow
 
 		verticalBox_1 = Box.createVerticalBox();
 		verticalBox_1.setBorder(new TitledBorder(null, "Classifica", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.add(verticalBox_1, "cell 1 0,width 33%,grow");
+		lowerPanel.add(verticalBox_1, "cell 1 0,width 33%,grow");
 
 		scrollPaneClassifica = new JScrollPane();
 		scrollPaneClassifica.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -277,7 +269,7 @@ public class MainWindow
 
 		verticalBox_2 = Box.createVerticalBox();
 		verticalBox_2.setBorder(null);
-		panel_1.add(verticalBox_2, "cell 2 0,width 33%,grow");
+		lowerPanel.add(verticalBox_2, "cell 2 0,width 33%,grow");
 
 		sliderBox = Box.createHorizontalBox();
 		sliderBox.setBorder(new TitledBorder(null, "Impostazioni", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -290,9 +282,9 @@ public class MainWindow
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				JSlider source = (JSlider)e.getSource();
-		        if (!source.getValueIsAdjusting()) {
-		            updatePrefs();
-		        }  
+				if (!source.getValueIsAdjusting()) {
+					updatePrefs();
+				}  
 			}
 		});
 		slider.setMinimum(1);
@@ -356,7 +348,7 @@ public class MainWindow
 		});
 		buttonGroup.add(rdbtnmntmCampionato);
 		mnImpostazioni.add(rdbtnmntmCampionato);
-		
+
 		rdbtnmntmCampionatoSegreto = new JRadioButtonMenuItem("Campionato Segreto");
 		rdbtnmntmCampionatoSegreto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -374,6 +366,7 @@ public class MainWindow
 		menuItemVersione.setText("Versione: "+VERSIONE);
 		popupMenu_3.add(menuItemVersione);
 		//cambiaTipoClassifica();
+		
 		sUpManager = new StartUpManager();
 		PrefsBundle bundle = sUpManager.getDefaultPrefs();
 		slider.setValue(bundle.getPrefsNumber());
@@ -386,12 +379,25 @@ public class MainWindow
 		case LOGICA_CM:
 			rdbtnmntmCampionato.setSelected(true);
 			break;
-		case Logica_CMS:
+		case LOGICA_CMS:
 			rdbtnmntmCampionatoSegreto.setSelected(true);
 			break;
 		default:
 			break;
-		}	
+		}
+		cambiaTipoClassifica();
+	}
+
+	protected void sfoglia() 
+	{
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		int returnVal = chooser.showOpenDialog(this.frmProgramminoSoniagallery);
+		if (returnVal == JFileChooser.APPROVE_OPTION) 
+		{
+			filePerVotoSegreto = chooser.getSelectedFile();
+			this.textFieldFile.setText(filePerVotoSegreto.getAbsolutePath());
+		} 
 	}
 
 	protected void cambiaTipoClassifica() 
@@ -401,6 +407,8 @@ public class MainWindow
 		updatePrefs();
 		sliderBox.setVisible(!rdbtnmntmCampionatoSegreto.isSelected());
 		((Box)sliderBox.getParent()).revalidate();
+		horizontalBoxFile.setVisible(rdbtnmntmCampionatoSegreto.isSelected());
+		((Box)horizontalBoxFile.getParent()).revalidate();
 		this.reset();
 	}
 
@@ -419,14 +427,21 @@ public class MainWindow
 		else if(rdbtnmntmCampionato.isSelected())
 			return TipoLogica.LOGICA_CM;
 		else if(rdbtnmntmCampionatoSegreto.isSelected())
-			return TipoLogica.Logica_CMS;
+			return TipoLogica.LOGICA_CMS;
 		else
 			return null;
 	}
-	
+
 	protected void generaClassificaOnClick()
 	{
-		Messaggio mess = logica.GeneraClassifica(this.slider.getValue());
+		if(filePerVotoSegreto == null)
+		{
+			if(textFieldFile.getText() != "")
+			{
+				filePerVotoSegreto = new File(textFieldFile.getText());
+			}
+		}
+		Messaggio mess = logica.GeneraClassifica(this.slider.getValue(), filePerVotoSegreto);
 		if(mess.getFlag() == FlagMessaggio.NESSUN_ERRORE)
 		{
 			textAreaClassifica.setText(mess.getTestoNessunErrore());
@@ -449,12 +464,20 @@ public class MainWindow
 	protected void ottieniCommentiOnClick(final String link)
 	{
 		logica = null;
-		if(rdbtnmntmSoniaGallery.isSelected())
+		switch(this.determinaTipoLogica())
+		{
+		case LOGICA_SG:
 			logica = new LogicaProgrammaSG();
-		else if(rdbtnmntmCampionato.isSelected())
+			break;
+		case LOGICA_CM:
 			logica = new LogicaProgrammaCM();
-		else
-			return;
+			break;
+		case LOGICA_CMS:
+			logica = new LogicaProgrammaCM();
+			break;
+		default:
+			break;
+		}
 		this.reset();
 
 		final DialogWait dial = new DialogWait(this.frmProgramminoSoniagallery);
@@ -482,7 +505,6 @@ public class MainWindow
 				dial.setVisible(false);
 				dial.dispose();
 			}
-
 		};
 		task.execute();
 	}
@@ -492,6 +514,9 @@ public class MainWindow
 		this.textAreaClassifica.setText("");
 		this.textAreaErrori.setText("");
 		this.textAreaFoto.setText("");
+		this.textFieldFile.setText("");
+		this.textFieldLink.setText("");
+		this.filePerVotoSegreto = null;
 	}
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
@@ -528,6 +553,7 @@ public class MainWindow
 			textFieldLink.setText("Non riesco ad incollare il testo dagli appunti");
 		}
 	}
+
 	protected void copia(String selectedText)
 	{
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
