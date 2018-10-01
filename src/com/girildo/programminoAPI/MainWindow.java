@@ -134,7 +134,7 @@ public class MainWindow
 	private void initialize()
 	{
 		frmProgramminoSoniagallery = new JFrame();
-		frmProgramminoSoniagallery.setTitle("Programmino SoniaGallery");
+		frmProgramminoSoniagallery.setTitle("Il Programmino");
 		frmProgramminoSoniagallery.setMinimumSize(new Dimension(800, 500));
 		//BorderLayout borderLayout = (BorderLayout) frame.getContentPane().getLayout();
 		frmProgramminoSoniagallery.setBounds(100, 100, 806, 522);
